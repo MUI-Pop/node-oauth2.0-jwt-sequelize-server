@@ -1,0 +1,17 @@
+{
+  "name": "OAuth2.0-JWT",
+  "version": "1.0.0",
+  "description": "Implementation of OAuth2.0 using JWT as its Token",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MUI",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.15.0"
+  }
+}
