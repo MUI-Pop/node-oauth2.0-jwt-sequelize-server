@@ -1,22 +1,23 @@
 const LoginModel = require('../db').Models.Login;
+const User = require('./user');
 
-let Login = function(){
+class Login {
+  constructor(loginObj) {
+    this.loginObj = loginObj;
 
-  let loginId,
-      password,
-      userId;
+    if (('loginId' in loginObj) && ('password' in loginObj) && ('userId' in loginObj)) {
+      this.loginId = loginObj.loginId;
+      this.password = loginObj.password;
+      this.userId = loginObj.userId;
+    }
+  }
 
-  this.create = function (loginObj) {
+  create() {
     return new Promise((resolve, reject) => {
-      if(!verifyLoginConstruct(loginObj)){
-        reject('Malformed Login Object');
-        return;
-      }
-
-      LoginModel.create(loginObj)
+      LoginModel.create(this.loginObj)
         .then((user) => {
-          loginId = user.loginId;
-          password = user.password;
+          this.loginId = user.loginId;
+          this.password = user.password;
           resolve(this);
         })
         .catch(e => {
@@ -25,60 +26,47 @@ let Login = function(){
     })
   }
 
-  verifyLoginConstruct = function (loginObj) {
-    if(('loginId' in loginObj) && ('password' in loginObj) && ('userId' in loginObj)){
-      return true;
-    }else{
-      return false;
-    }
-  },
 
-  this.findById = function (loginId) {
+  static findById(loginId) {
     return new Promise((resolve, reject) => {
-      LoginModel.findById(loginId 
-        //,{ include: [{model: UserModel}]}
-      )
-      .then((login) => {
-        loginId = login.loginId;
-        password = login.password;
-        userId = login.userId;
-        resolve(this);
-      }).catch(e => {
-        reject(e);
-      })
+      LoginModel.findById(loginId)      
+        .then((login) => {
+          let loginObj = new Login(login);
+          resolve(loginObj);
+        }).catch(e => {
+          reject(e);
+        })
     })
-  },
+  }
 
-  this.findAll = function(){
+  static findAll() {
     return new Promise((resolve, reject) => {
       LoginModel.findAll(
-        //{include: [{model: UserModel}]}
+        { include: [{ model: User.model }] }
       )
-      .then(result => {
-        resolve(JSON.stringify(result));
-      }).catch(e => {
-        reject(e);
-      })
+        .then(result => {
+          resolve(JSON.stringify(result));
+        }).catch(e => {
+          reject(e);
+        })
     })
   }
 
-  this.update = function(loginId){
+  update(loginId) {
     return new Promise((resolve, reject) => {
-       LoginModel.update(loginId, { where: {loginId: loginId}, returning: true, plain: true})
-      .then((user) => {
-        resolve();
-      }).catch(e => {
-        reject(e);
-      })
+      LoginModel.update(loginId, { where: { loginId: this.loginId }, returning: true, plain: true })
+        .then((user) => {
+          resolve();
+        }).catch(e => {
+          reject(e);
+        })
     })
   }
 
-  this.getJSON = function(){
-    return JSON.stringify({
-      loginId: loginId, 
-      password: password,
-      //userId: userId
-    });
+  toJSON() {
+    return {
+      loginId: this.loginId
+    };
   }
 }
 

@@ -8,6 +8,8 @@ const db = models(config.database.username, config.database.password, config.dat
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+
 //app.use(express.static('public'));
 //Initialize Database
 (async () => {

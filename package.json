@@ -9,9 +9,11 @@
   "author": "MUI",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "mysql2": "^1.4.2",
+    "oauth2-server": "^3.0.0",
     "sequelize": "^4.15.0"
   }
 }
