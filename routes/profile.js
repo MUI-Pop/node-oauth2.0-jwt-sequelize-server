@@ -1,15 +1,31 @@
-const express = require('express');
-const router = express.Router();
+const oauthServer = require('oauth2-server');
+const Request = oauthServer.Request;
+const Response = oauthServer.Response;
 const profileHandler = require('./handler/profile');
 
-router.route('/profile')
-.get(profileHandler.findAllUsers)
-.post(profileHandler.create);
+const authorize = (auth) => {
+    return (req, res, next) => {
+        let request = new Request(req);
+        let response = new Response(res);
+        return auth.authenticate(request, response)
+        .then( (code) => {
+          next();
+        })
+        .catch( (err) => {
+            res.send(err);
+        });
+    }
+}
 
-router.route('/profile/:id')
-.get(profileHandler.findOneUser);
+module.exports = (router, auth) => {
 
-router.route('/login/:id')
-.get(profileHandler.findOneUserByLoginId);
+    router.route('/profiles')
+        .get(authorize(auth),profileHandler.findAllUsers)
+        .post(profileHandler.create);
 
-module.exports = router;
+    router.route('/profiles/:id')
+        .get(authorize(auth),profileHandler.findOneUser);
+
+    return router;
+}
+

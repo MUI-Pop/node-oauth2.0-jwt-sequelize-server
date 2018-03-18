@@ -1,4 +1,4 @@
-const UserModel = require('../db').Models.User;
+const UserModel = global.db.Models.User;
 const Login = require('./login');
 const bcrypt = require('bcrypt');
 
@@ -59,7 +59,7 @@ class User {
 
   static findById(userId) {
     return new Promise((resolve, reject) => {
-      UserModel.findById(userId, { include: [{ model: Login.model }] })
+      UserModel.findById(userId, { include: [{ model: global.db.Models.Login }] })
         .then((user) => {
           let userObj = new User(user);
           resolve(userObj);
@@ -71,7 +71,7 @@ class User {
 
   static findAll() {
     return new Promise((resolve, reject) => {
-      UserModel.findAll({ include: [{ model: Login.model }] })
+      UserModel.findAll({ include: [{ model: global.db.Models.Login }] })
         .then(result => {
           resolve(JSON.stringify(result));
         }).catch(e => {

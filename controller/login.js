@@ -1,7 +1,7 @@
-const LoginModel = require('../db').Models.Login;
-const User = require('./user');
+const LoginModel = global.db.Models.Login;
 
 class Login {
+
   constructor(loginObj) {
     this.loginObj = loginObj;
 
@@ -42,7 +42,7 @@ class Login {
   static findAll() {
     return new Promise((resolve, reject) => {
       LoginModel.findAll(
-        { include: [{ model: User.model }] }
+        { include: [{ model: global.db.Models.User }] }
       )
         .then(result => {
           resolve(JSON.stringify(result));
@@ -70,5 +70,4 @@ class Login {
   }
 }
 
-Login.model = LoginModel;
 module.exports = Login;

@@ -38,11 +38,11 @@ class DB {
     }
   }
 
-  async sync(){
+  async sync() {
     try {
       await this.connection.sync({ force: false });
       console.log('Successfully Synced with DB');
-    }catch(e){
+    } catch (e) {
       console.error('Error in sync', e);
     }
   }
@@ -61,13 +61,13 @@ class DB {
         Models[file.split('.')[0]] = model;
       });
 
-      Object.keys(Models).forEach(function(modelName) {
-        if ("associate" in Models[modelName]) {
-          Models[modelName].associate(Models);
-        }
-      });
-  
-      module.exports.Models = Models;
+    Object.keys(Models).forEach(function (modelName) {
+      if ("associate" in Models[modelName]) {
+        Models[modelName].associate(Models);
+      }
+    });
+
+    module.exports.Models = Models;
   }
 
   async init() {
@@ -79,14 +79,19 @@ class DB {
     } catch (e) {
       console.error('Error initializing DB', e);
     }
-    await this.sync({force: true});
+    await this.sync({ force: true });
   }
 }
 
-function provideInstance(userName, password, dbHost, dbPort, dbName){
-  if(!instance)
+function provideInstance(userName, password, dbHost, dbPort, dbName) {
+  if (!instance) {
+    console.log('Initiating a DB Instance');
     instance = new DB(userName, password, dbHost, dbPort, dbName);
     return instance;
+  } else {
+    console.log('Providing an existing instance');
+    return instance;
+  }
 }
 
 module.exports = provideInstance;
